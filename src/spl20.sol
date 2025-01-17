@@ -1,4 +1,4 @@
-// Subject to the MIT license
+// SPDX-License-Identifier: MIT license
 pragma solidity =0.8.28;
 
 struct Mint {
@@ -55,6 +55,7 @@ contract Spl20 {
 
         require(tokenAccounts[fromTokenAddress].balance >= amount, "Insufficient balance");
         require(tokenAccounts[toTokenAddress].balance + amount <= type(uint256).max, "Supply overflow");
+        require(tokenAccounts[fromTokenAddress].owner == msg.sender, "fromToken owner is not msg.sender");
         require(tokenAccounts[fromTokenAddress].isFrozen == false, "fromToken is frozen");
         require(tokenAccounts[toTokenAddress].isFrozen == false, "toToken is frozen");
 

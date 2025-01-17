@@ -19,16 +19,16 @@ struct TokenAccount {
 contract Spl20 {
     mapping(address => Mint) public mints;
     mapping(address => TokenAccount) public tokenAccounts;
-    address[] public mintAddresses;
-    address[] public tokenAddresses;
+    mapping(address => bool) public mintAddresses;
+    mapping(address => bool) public tokenAddresses;
 
     function initializeMint(uint8 decimals, address mintAuthority, address freezeAuthority, address mintAddress)
         public
         returns (Mint memory)
     {
-        require(mints[mintAddress].mintAuthority == address(0), "Mint already exists");
+        require(mintAddresses[mintAddress] == false, "Mint already exists");
         mints[mintAddress] = Mint(decimals, 0, mintAuthority, freezeAuthority, mintAddress);
-        mintAddresses.push(mintAddress);
+        mintAddresses[mintAddress] = true;
         return Mint(decimals, 0, mintAuthority, freezeAuthority, mintAddress);
     }
 
@@ -43,7 +43,7 @@ contract Spl20 {
 
         if (tokenAccounts[tokenAddress].mintAddress == address(0)) {
             tokenAccounts[tokenAddress] = TokenAccount(mintAddress, toMintTokens, 0, false);
-            tokenAddresses.push(tokenAddress);
+            tokenAddresses[tokenAddress] = true;
         }
         tokenAccounts[tokenAddress].balance += amount;
         tokenAccounts[tokenAddress].owner = toMintTokens;
@@ -60,7 +60,7 @@ contract Spl20 {
 
         if (tokenAccounts[toTokenAddress].mintAddress == address(0)) {
             tokenAccounts[toTokenAddress] = TokenAccount(mintAddress, to, 0, false);
-            tokenAddresses.push(toTokenAddress);
+            tokenAddresses[toTokenAddress] = true;
         }
 
         tokenAccounts[fromTokenAddress].balance -= amount;

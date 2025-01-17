@@ -58,7 +58,6 @@ contract Spl20 {
         require(tokenAccounts[fromTokenAddress].isFrozen == false, "fromToken is frozen");
         require(tokenAccounts[toTokenAddress].isFrozen == false, "toToken is frozen");
 
-
         if (tokenAccounts[toTokenAddress].mintAddress == address(0)) {
             tokenAccounts[toTokenAddress] = TokenAccount(mintAddress, to, 0, false);
             tokenAddresses.push(toTokenAddress);

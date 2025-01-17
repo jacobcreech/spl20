@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// Subject to the MIT license
+pragma solidity =0.8.28;
 
 struct Mint {
     uint8 decimals;
@@ -55,7 +55,9 @@ contract Spl20 {
 
         require(tokenAccounts[fromTokenAddress].balance >= amount, "Insufficient balance");
         require(tokenAccounts[toTokenAddress].balance + amount <= type(uint256).max, "Supply overflow");
-        require(tokenAccounts[fromTokenAddress].isFrozen == false, "Token is frozen");
+        require(tokenAccounts[fromTokenAddress].isFrozen == false, "fromToken is frozen");
+        require(tokenAccounts[toTokenAddress].isFrozen == false, "toToken is frozen");
+
 
         if (tokenAccounts[toTokenAddress].mintAddress == address(0)) {
             tokenAccounts[toTokenAddress] = TokenAccount(mintAddress, to, 0, false);
